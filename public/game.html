@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset=utf-8 />
+	<title>Bingo Game - LC2013</title>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+	<!--[if IE]>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	
+	<script type="text/javascript" src="public/js/game.js"></script>
+	<link rel="stylesheet" type="text/css" media="screen" href="public/css/styles.css" />
+	<!-- testing socketio -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.2/socket.io.js"></script>
+	<script>
+		//var socket = io();
+		var socket = io();
+//		socket.on('disconnect',function(){
+//			console.log("Reconnecting...");
+//			socket.socket.reconnect();
+//		});
+		socket.on('message', function(msg) {
+			modal.style.display = "block";
+			$('#modalContent').append($('<p id="modalText">').text(msg));
+//			alert(msg);
+		});
+	</script>
+	<!-- end testing socketio -->
+
+</head>
+<body>
+	<div id="myModal" class="modal">
+		<div class="modal-header" id="modalHead">
+			<span class="close">&times;</span>
+		</div>
+		<div class="modal-content" id="modalContent">
+		</div>
+	</div>
+	<div id="page">
+	<table>
+		<tr>
+			<td id="0">&nbsp;</td>
+			<td id="1">&nbsp;</td>
+			<td id="2">&nbsp;</td>
+			<td id="3">&nbsp;</td>
+			<td id="4">&nbsp;</td>
+		</tr>
+		<tr>
+			<td id="5">&nbsp;</td>
+			<td id="6">&nbsp;</td>
+			<td id="7">&nbsp;</td>
+			<td id="8">&nbsp;</td>
+			<td id="9">&nbsp;</td>
+		</tr>
+		<tr>
+			<td id="10">&nbsp;</td>
+			<td id="11">&nbsp;</td>
+			<td id="free" style="background-color: rgb(51, 51, 51); color: rgb(255, 255, 255);">Free</td>
+			<td id="12">&nbsp;</td>
+			<td id="13">&nbsp;</td>
+		</tr>
+		<tr>
+			<td id="14">&nbsp;</td>
+			<td id="15">&nbsp;</td>
+			<td id="16">&nbsp;</td>
+			<td id="17">&nbsp;</td>
+			<td id="18">&nbsp;</td>
+		</tr>
+		<tr>
+			<td id="19">&nbsp;</td>
+			<td id="20">&nbsp;</td>
+			<td id="21">&nbsp;</td>
+			<td id="22">&nbsp;</td>
+			<td id="23">&nbsp;</td>
+		</tr>
+	</table>
+	<!--<h3><a href="#" id="newCard" >Click me for a new card</a></h3>-->
+	</div>
+	<div id="button">
+		<button>BINGO!</button>
+	</div>
+	<script>
+		var modal = document.getElementById('myModal');
+		var span = document.getElementsByClassName("close")[0];
+                span.onclick = function () {
+                        modal.style.display = "none";
+			$('#modalContent').empty();
+                }
+
+	</script>
+</body>
+</html>
