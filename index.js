@@ -27,60 +27,128 @@ console.log("Server started on port 3000");
 
 // Socket.io
 // Create a Socket.IO server
-var io = require('socket.io')(server,{});
+//below works
+//var io = require('socket.io')(server,{});
+
+//1800000 is 30 minutes
+//var io = require('socket.io')(server,{'pingTimeout': 120000, 'pingInterval':1000});
+var io = require('socket.io')(server,{'pingTimeout': 1000, 'pingInterval':1000});
+
+// need to figre out how to set this timeout value very high. timeout after 120+20s
+//7200000000 = 120 minutes
+//io.set('heartbeat timeout', 900000000);
+//io.set('heartbeat timeout', 1000);
+//io.set('heartbeat interval',1000);
+//io.set('close timeout',1000);
 
 var room = new Room("test");
+
 
 // Listen for Socket.IO connections
 io.sockets.on('connection',function(socket){
 	// Logs message when connection detected
-	//console.log('socket connection detected');
-	//set player name
-//	socket.emit('setName');
-//	socket.on('reconnect', function() {
-//		socket.socket.reconnect();
-//	});
-	socket.on('setName',function(data) {
-		var player = new Player(socket.id);
-		player.setName(data.username);
-		// addPlayer function not working, returns undefined
-		room.addPlayer(player);
-		console.log('player name is ' + player.getName());
+	console.log('socket connection detected');
+
+	socket.on('getPlayerID',function(data){
+		console.log("start getPlayerID");
+		var player = room.getPlayer(socket.id);
+		if(null == player) {
+			console.log("player null in getPlayerID");
+			socket.emit('setPlayerID',socket.id);
+		}
+		else {
+			console.log("getPlayerID is true. Do something...");
+			console.log("getPlayerID ID: " + data);
+		}
 	});
 
-//	socket.emit('userClick');
+	socket.on('disconnect',function(){
+		var player = room.getPlayer(socket.id);
+		try {
+			//console.log("socket connection disconnected. Player " + player.getName() + " removed.");
+			console.log("DISCONNECT: Attempting to save player " + player.getName());
+		} catch (err) {
+			console.log("Unable to get player name: " + err);
+		}
+		//console.log("room.removePlayer");
+		//room.removePlayer(player);
+	});
+
+	socket.on('setName',function(data) {
+		var player = new Player(socket.id);
+		//try {
+		console.log("username: " + data.username);
+		//this line stays
+		player.setName(data.username);
+		//} catch(err) {
+		//	console.log(err);
+		//}
+		if(player.getName != null) {
+			//console.log("room.addPlayer");
+			room.addPlayer(player);
+			console.log('player name is ' + player.getName());
+		} else {
+			console.log("Player is null. Do something else");
+		}
+		//send socketio for player to renew session
+		//socket.emit('playerID',socket.id);
+	});
+
 	//Write cell id to server on click
 	socket.on('userClick',function(data) {
 		var player = room.getPlayer(socket.id);
-		user = player.getName();
-
-		//functionality to check if element in arry before adding
-		if (player.selectedNums.indexOf(data) === -1) {
-			player.setNums(data);
-			console.log("set: " + data);
+		if(null === player) {
+			console.log("player is null");
+			// send player array and board from client here to be populated on reconnect
 		}
 		else {
-			player.removeNums(data);
-			console.log("remove: " + data);
-		}
+			try {
+				user = player.getName();
+			} catch(err) {
+				console.log("Click error for player");
+			}
 
-		console.log("SERVER: " + user + ' clicked ' + player.getNums());
+			//functionality to check if element in array before adding
+			if (player.selectedNums.indexOf(data) === -1) {
+				player.setNums(data);
+				//console.log("set: " + data);
+			}
+			else {
+				player.removeNums(data);
+				//console.log("remove: " + data);
+			}
+
+			console.log("SERVER: " + user + ' clicked ' + player.getNums());
+		}
 	});
 
 	socket.on('playerWins',function(data) {
 		var utils = new Utils();
 		var player = room.getPlayer(socket.id);
-		user = player.getName();
+		try {
+			user = player.getName();
+		} catch(err) {
+			console.log("Error determining player name in playerWins");
+		}
 		console.log("User " + user + " clicked bingo.");
-		// sendMessage aint working.
 		if(utils.checkIfWon(player.getNums())){
 			console.log("Player " + user + " WINS!");
 			var message = user + " has a bingo!";
-			//utils.sendMessageToAll(io, message, room.players);
 			io.emit('message',message);
 		} else {
 			console.log("False win condition");
 		}
 
+	});
+
+	socket.on('savePlayerState',function(data) {
+		console.log(data);
+		var  player = room.getPlayer(socket.id);
+		try {
+			user = player.getName();
+			console.log("savePlayerState user: " + user);
+		} catch(err) {
+			console.log("error getting name in savePlayerState");
+		}
 	});
 });

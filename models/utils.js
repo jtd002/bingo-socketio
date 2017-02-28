@@ -8,12 +8,6 @@ Utils.prototype.checkIfWon = function(playerInput){
 	return playerWin;
 };
 
-Utils.prototype.sendMessageToAll = function(io, msg, players) {
-	for(var i = 0; i < players.length; i++) {
-		io.sockets.socket(players[i].id).emit(msg);
-	}
-};
-
 function checkForWin(arr) {
 	var winners = [
 		['0','1','2','3','4'],

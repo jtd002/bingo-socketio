@@ -5,25 +5,36 @@ window.onload = init;
 
 	var usedArray = new Array(76);
 	var baseArray = new Array(0,0,0,0,0,0,0,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2);
+	var playerGameBoard = [];
 	var number = 0;
 	var base = 0;
 
 	var name;
+	var playerID;
    
 //   init();
  
 	function init(){
+		checkForNewPlayer();
 		getName();
 		for(var i = 0; i<24; i++){
 			fillCard(i);
 		}
+		//console.log(usedArray);
+		saveState(playerGameBoard);
+	}
+
+	function checkForNewPlayer() {
+		socket.emit('setPlayerID',playerID);
 	}
 
 	function getName(){
-		var name = prompt('Enter name: ');
-		if(name === null){
-			alert("You must enter a name to play!");
-			getName();
+		if(name === undefined || name === null){
+			var name = prompt('Enter name: ');
+			if(name === null){
+				alert("You must enter a name to play!");
+				getName();
+			}
 		}
 //		console.log('name is ' + name);
 		socket.emit('setName', {username: name});
@@ -84,8 +95,9 @@ window.onload = init;
 		//console.log(names[number]);
 		 
 		if(usedArray[number] != true){
-			$('#'+i).html(names[number]);
+				$('#'+i).html(names[number]);
 				usedArray[number] = true;
+				playerGameBoard.push(names[number]);
 			}
 			else{
 				fillCard(i);
@@ -96,6 +108,11 @@ window.onload = init;
 		for(var j = 0; j < usedArray.length; j++){
 		usedArray[j] = false;
 		}	
+	}
+
+	function saveState(arr) {
+		//console.log("used values: " + arr);
+		socket.emit('savePlayerState',arr);
 	}
 	 
 	 //$('#newCard').click(function(){

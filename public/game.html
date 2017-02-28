@@ -24,6 +24,17 @@
 			$('#modalContent').append($('<p id="modalText">').text(msg));
 //			alert(msg);
 		});
+		socket.on('setPlayerID', function(data) {
+			console.log("started setPlayerID");
+			if (playerID == null) {
+				var playerID = data;
+				console.log("player id is " + data);
+			}
+			else {
+				socket.emit('getPlayerID',playerID);
+				console.log("sending ID to server: " + playerID);
+			}
+		});
 	</script>
 	<!-- end testing socketio -->
 

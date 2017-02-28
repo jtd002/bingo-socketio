@@ -12,6 +12,10 @@ Player.prototype.getName = function(){
 	return this.name;
 };
 
+Player.prototype.setID = function(){
+	return this.id;
+};
+
 Player.prototype.setNums = function(cell){
 	this.selectedNums.push(cell);
 };
