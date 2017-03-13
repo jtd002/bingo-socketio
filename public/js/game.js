@@ -1,6 +1,4 @@
  //$(document).ready(function(){
-   
-
 window.onload = init;
 
 	var usedArray = new Array(76);
@@ -9,31 +7,38 @@ window.onload = init;
 	var number = 0;
 	var base = 0;
 
+	var chosenNums = ['free'];
 	var name;
-	var playerID;
-   
-//   init();
- 
+	var clientId = Math.random().toString(36).substr(2,10);
+
 	function init(){
-		getName();
+		name = getName();
 		for(var i = 0; i<24; i++){
 			fillCard(i);
 		}
-		//console.log(usedArray);
-		saveState(playerGameBoard);
+		connect();
+	}
+
+	function connect() {
+		socket.emit('clientConnect', {username: name, Id: clientId, board: playerGameBoard, chosenNumbers: chosenNums});
 	}
 
 	function getName(){
-		if(name === undefined || name === null){
-			var name = prompt('Enter name: ');
+		if(name === undefined || name === null || name === ""){
+			name = prompt('Enter name: ');
 			if(name === null){
 				alert("You must enter a name to play!");
 				getName();
 			}
 		}
-//		console.log('name is ' + name);
-		socket.emit('setName', {username: name});
+		//console.log("getName name is " + name);
+		return name;
+//		socket.emit('setName', {username: name});
+//		socket.emit('authenticate', {username: name});
 	}
+
+	// send player data to server
+//	socket.emit('clientConnect', {username: name, Id: clientId, board: playerGameBoard}; 
 	  	 
 	function fillCard(i){
 		base = baseArray[i] * 15;
@@ -94,39 +99,27 @@ window.onload = init;
 				usedArray[number] = true;
 				playerGameBoard.push(names[number]);
 			}
-			else{
+			else {
 				fillCard(i);
 			}
 	}
 	 
 	function resetUsedNumbersArray(){
 		for(var j = 0; j < usedArray.length; j++){
-		usedArray[j] = false;
+			usedArray[j] = false;
 		}	
 	}
 
-	function saveState(arr) {
-		//console.log("used values: " + arr);
-		socket.emit('savePlayerState',arr);
-	}
-	 
-	 //$('#newCard').click(function(){
-	 //	resetUsedNumbersArray();
-	 //	init();
-	 //});
-
-	 $(function() {
-		 $('td').click(function(){
+	$(function() {
+		$('td').click(function(){
 			var toggle = this.style;
 			toggle.backgroundColor = toggle.backgroundColor? "":"#333";
 			toggle.color = toggle.color? "":"#fff";
 			//console.log("Clicked cell ID:" + this.id);
 			socket.emit('userClick', this.id);
-		 });
+			chosenNums.push(this.id);
+		});
 		$('button').click(function(){
 			socket.emit('playerWins');
 		});
 	 });
-
-
-

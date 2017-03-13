@@ -1,7 +1,9 @@
 function Player(playerID){
 	this.id = playerID;
+	this.clientId = "";
 	this.name = "";
 	this.selectedNums = ['free'];
+	this.board = [];
 };
 
 Player.prototype.setName = function(name){
@@ -12,8 +14,24 @@ Player.prototype.getName = function(){
 	return this.name;
 };
 
-Player.prototype.setID = function(){
-	return this.id;
+Player.prototype.setId = function(id){
+	this.clientId = id;
+};
+
+Player.prototype.getId = function(){
+	return this.clientId;
+};
+
+Player.prototype.setBoard = function(board){
+	this.board = board;
+};
+
+Player.prototype.getBoard = function(){
+	return this.board;
+};
+
+Player.prototype.setNumArray = function(arr){
+	this.selectedNums = arr;
 };
 
 Player.prototype.setNums = function(cell){

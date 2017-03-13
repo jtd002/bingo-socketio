@@ -7,40 +7,29 @@
 	<!--[if IE]>
 		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
-	
-	<script type="text/javascript" src="public/js/game.js"></script>
 	<link rel="stylesheet" type="text/css" media="screen" href="public/css/styles.css" />
 	<!-- testing socketio -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.2/socket.io.js"></script>
 	<script>
-		//var socket = io();
-		var socket = io();
-//		console.log("CONNECT GAME.HTML");
-//		var playerID;
-//		socket.on('disconnect',function(){
-//			console.log("Reconnecting...");
-//			socket.socket.reconnect();
-//		});
+//		var socket = io();
+		var socket = io({
+			'reconnection': true,
+			'reconnectionDelay': 1000,
+			'reconnectionDelayMax': 5000,
+			'reconnectionAttempts': 5
+		});
+		socket.on('disconnect',function(){
+			console.log("Disconnect on client");
+			connect();
+		});
+
 		socket.on('message', function(msg) {
 			modal.style.display = "block";
 			$('#modalContent').append($('<p id="modalText">').text(msg));
-//			alert(msg);
 		});
-/*		socket.on('setPlayerID', function(data) {
-			console.log("started setPlayerID");
-			if (playerID == null) {
-				var playerID = data;
-				console.log("game.html player id is " + data);
-			}
-			else {
-				socket.emit('getPlayerID',playerID);
-				console.log("sending ID to server: " + playerID);
-			}
-		});
-		console.log("END CONNECT GAME.HTML: " + playerID);*/
 	</script>
 	<!-- end testing socketio -->
-
+	<script type="text/javascript" src="public/js/game.js"></script>
 </head>
 <body>
 	<div id="myModal" class="modal">

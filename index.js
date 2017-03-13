@@ -30,15 +30,7 @@ console.log("Server started on port 3000");
 
 //1800000 is 30 minutes
 //var io = require('socket.io')(server,{'pingTimeout': 120000, 'pingInterval':1000});
-//below for testing only
-var io = require('socket.io')(server,{'pingTimeout': 5000, 'pingInterval':5000});
-
-// need to figre out how to set this timeout value very high. timeout after 120+20s
-//7200000000 = 120 minutes
-//io.set('heartbeat timeout', 900000000);
-//io.set('heartbeat timeout', 1000);
-//io.set('heartbeat interval',1000);
-//io.set('close timeout',1000);
+var io = require('socket.io')(server,{'pingTimeout': 2000, 'pingInterval':1000});
 
 var room = new Room("test");
 
@@ -46,53 +38,41 @@ var room = new Room("test");
 io.sockets.on('connection',function(socket){
 	// Logs message when connection detected
 	console.log('socket connection detected');
-	console.log('socketID = ' + socket.id);
-//	socket.emit('setPlayerID',socket.id);
 
-/*	socket.on('getPlayerID',function(data){
-		console.log("start getPlayerID");
-		var player = room.getPlayer(socket.id);
-		if(null == player) {
-			console.log("player null in getPlayerID");
-			socket.emit('setPlayerID',socket.id);
-		}
-		else {
-			console.log("getPlayerID is true. Do something...");
-			console.log("getPlayerID ID: " + data);
-		}
+	socket.on('clientConnect',function(data){
+		var player = new Player(socket.id);
+		player.setId(data.Id);
+		console.log("clientConnect Id: " + data.Id);
+
+		player.setName(data.username);
+		console.log("clientConnect name: " + data.username);
+		
+		player.setBoard(data.board);
+		console.log("clientConnect board: " + data.board);
+
+		player.setNumArray(data.chosenNumbers);
+		console.log("clientConnect nums: " + data.chosenNumbers);
+
+		if(player.getName != null) {
+                        room.addPlayer(player);
+                        console.log('player name is ' + player.getName());
+                } else {
+                        console.log("Player is null. Do something else");
+                }
 	});
-*/
+
 	socket.on('disconnect',function(){
 		var player = room.getPlayer(socket.id);
 		try {
 			var name = player.getName();
+			console.log("socket connection disconnected. Player " + name + " removed.");
+	                socket.emit('clientDisconnect');
+        	        socket.emit('playerNumsChosen',player.getNums());
 		}
 		catch (err) {
 			console.log("Unable to get player name: " + err);
 		}
-		console.log("socket connection disconnected. Player " + name + " removed.");
-		//console.log("room.removePlayer");
 		room.removePlayer(player);
-	});
-
-	socket.on('setName',function(data) {
-		var player = new Player(socket.id);
-		//try {
-		console.log("username: " + data.username);
-		//this line stays
-		player.setName(data.username);
-		//} catch(err) {
-		//	console.log(err);
-		//}
-		if(player.getName != null) {
-			//console.log("room.addPlayer");
-			room.addPlayer(player);
-			console.log('player name is ' + player.getName());
-		} else {
-			console.log("Player is null. Do something else");
-		}
-		//send socketio for player to renew session
-		//socket.emit('playerID',socket.id);
 	});
 
 	//Write cell id to server on click
@@ -112,11 +92,9 @@ io.sockets.on('connection',function(socket){
 			//functionality to check if element in array before adding
 			if (player.selectedNums.indexOf(data) === -1) {
 				player.setNums(data);
-				//console.log("set: " + data);
 			}
 			else {
 				player.removeNums(data);
-				//console.log("remove: " + data);
 			}
 
 			console.log("SERVER: " + user + ' clicked ' + player.getNums());
