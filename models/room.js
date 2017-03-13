@@ -23,9 +23,13 @@ Room.prototype.removePlayer = function(player) {
 	var playerIndex = -1;
 	console.log("room players.length is " + this.players.length);
 	for(var i = 0; i < this.players.length; i++) {
-		if(this.players[i].id == player.id){
-			playerIndex = i;
-			break;
+		try {
+			if(this.players[i].id == player.id){
+				playerIndex = i;
+				break;
+			}
+		} catch (err) {
+			console.log("failed in room removePlayer");
 		}
 	}
 	this.players.remove(playerIndex);

@@ -27,12 +27,11 @@ console.log("Server started on port 3000");
 
 // Socket.io
 // Create a Socket.IO server
-//below works
-//var io = require('socket.io')(server,{});
 
 //1800000 is 30 minutes
 //var io = require('socket.io')(server,{'pingTimeout': 120000, 'pingInterval':1000});
-var io = require('socket.io')(server,{'pingTimeout': 1000, 'pingInterval':1000});
+//below for testing only
+var io = require('socket.io')(server,{'pingTimeout': 5000, 'pingInterval':5000});
 
 // need to figre out how to set this timeout value very high. timeout after 120+20s
 //7200000000 = 120 minutes
@@ -43,13 +42,14 @@ var io = require('socket.io')(server,{'pingTimeout': 1000, 'pingInterval':1000})
 
 var room = new Room("test");
 
-
 // Listen for Socket.IO connections
 io.sockets.on('connection',function(socket){
 	// Logs message when connection detected
 	console.log('socket connection detected');
+	console.log('socketID = ' + socket.id);
+//	socket.emit('setPlayerID',socket.id);
 
-	socket.on('getPlayerID',function(data){
+/*	socket.on('getPlayerID',function(data){
 		console.log("start getPlayerID");
 		var player = room.getPlayer(socket.id);
 		if(null == player) {
@@ -61,17 +61,18 @@ io.sockets.on('connection',function(socket){
 			console.log("getPlayerID ID: " + data);
 		}
 	});
-
+*/
 	socket.on('disconnect',function(){
 		var player = room.getPlayer(socket.id);
 		try {
-			//console.log("socket connection disconnected. Player " + player.getName() + " removed.");
-			console.log("DISCONNECT: Attempting to save player " + player.getName());
-		} catch (err) {
+			var name = player.getName();
+		}
+		catch (err) {
 			console.log("Unable to get player name: " + err);
 		}
+		console.log("socket connection disconnected. Player " + name + " removed.");
 		//console.log("room.removePlayer");
-		//room.removePlayer(player);
+		room.removePlayer(player);
 	});
 
 	socket.on('setName',function(data) {

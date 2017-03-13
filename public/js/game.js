@@ -15,17 +15,12 @@ window.onload = init;
 //   init();
  
 	function init(){
-		checkForNewPlayer();
 		getName();
 		for(var i = 0; i<24; i++){
 			fillCard(i);
 		}
 		//console.log(usedArray);
 		saveState(playerGameBoard);
-	}
-
-	function checkForNewPlayer() {
-		socket.emit('setPlayerID',playerID);
 	}
 
 	function getName(){
