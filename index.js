@@ -29,8 +29,8 @@ console.log("Server started on port 3000");
 // Create a Socket.IO server
 
 //1800000 is 30 minutes
-//var io = require('socket.io')(server,{'pingTimeout': 120000, 'pingInterval':1000});
-var io = require('socket.io')(server,{'pingTimeout': 2000, 'pingInterval':1000});
+var io = require('socket.io')(server,{'pingTimeout': 120000, 'pingInterval':1000});
+//var io = require('socket.io')(server,{'pingTimeout': 2000, 'pingInterval':1000});
 
 var room = new Room("test");
 
@@ -68,11 +68,11 @@ io.sockets.on('connection',function(socket){
 			console.log("socket connection disconnected. Player " + name + " removed.");
 	                socket.emit('clientDisconnect');
         	        socket.emit('playerNumsChosen',player.getNums());
+			room.removePlayer(player);
 		}
 		catch (err) {
 			console.log("Unable to get player name: " + err);
 		}
-		room.removePlayer(player);
 	});
 
 	//Write cell id to server on click
@@ -116,18 +116,8 @@ io.sockets.on('connection',function(socket){
 			io.emit('message',message);
 		} else {
 			console.log("False win condition");
+			io.to(socket.id).emit('message',"You suck");
 		}
 
-	});
-
-	socket.on('savePlayerState',function(data) {
-		console.log(data);
-		var  player = room.getPlayer(socket.id);
-		try {
-			user = player.getName();
-			console.log("savePlayerState user: " + user);
-		} catch(err) {
-			console.log("error getting name in savePlayerState");
-		}
 	});
 });
