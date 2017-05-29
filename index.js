@@ -12,7 +12,7 @@ var Room = require('./models/room.js');
 var Utils = require('./models/utils.js');
 
 // Send requests to web root to index.html
-app.get('/',function(req, res) {
+app.get('/bingo',function(req, res) {
 	res.sendFile(__dirname + '/public/game.html');
 });
 
@@ -116,7 +116,7 @@ io.sockets.on('connection',function(socket){
 			io.emit('message',message);
 		} else {
 			console.log("False win condition");
-			io.to(socket.id).emit('message',"You suck");
+			io.to(socket.id).emit('message',"No... not a bingo. Try again.");
 		}
 
 	});
