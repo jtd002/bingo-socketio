@@ -85,11 +85,11 @@ window.onload = init;
 				  "Cake smushed in bride/groom's face",
 				  "Toast to couple",
 				  "\"Mom\" dancing",
-				  "PP",
-				  "QQ",
-				  "RR",
-				  "SS",
-				  "TT"]; 
+				  "Wardrobe malfunction",
+				  "Crying parent(s)",
+				  "Outlandish photo op",
+				  "Bacon tower",
+				  "Groom adjusting his ring"]; 
 		// Math.random * maximum value (floor gives int of math.random) + 1 = 0 < val < max 
 		number = base + Math.floor(Math.random()*15)+1;		
 		//console.log(names[number]);
