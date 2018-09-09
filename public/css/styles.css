@@ -2,10 +2,10 @@ html,body{
 	padding: 0;
 	margin: 0;
 	height:100%;
-	background-image:url("/public/images/LGLogo.jpg");
-	background-size: contain;
+	background-color: rgb(255,255,240);
+	/*background-size: contain;
 	background-position: center center;
-	background-repeat: no-repeat;
+	background-repeat: no-repeat;*/
 }
 
 #page{
@@ -37,7 +37,7 @@ html,body{
 }
 
 .modal-header{
-	background-color: #fefefe;
+	background-color: #000066;
         margin: 15% auto 0% auto;
         padding: 20px;
         border: 1px solid #888;
@@ -47,13 +47,16 @@ html,body{
 }
 
 .modal-content{
-	background-color: #fefefe;
+	background-color: #000066;
 	margin: 0% auto 15% auto;
 	padding: 20px;
 	border: 1px solid #888;
 	border-top: none;
 	width: 60%;
 	text-align: center;
+	color: rgb(255,255,240);
+	font-weight: bold;
+	font-family: arial;
 }
 
 .close{
@@ -70,13 +73,13 @@ table{
 
 td{
 	font-family:arial;
-	/*color:#333;*/
-	background:rgba(255,255,255);
-	background:rgba(255,255,255,.5);
+	/*color:#333;
+	background:rgba(255,255,240);*/
+	background:rgba(255,255,240,.5);
 	padding:10px;
 	width:20%;
 	text-align:center;
-	border:10px solid #ddc;
+	border:10px solid rgba(121,81,129,.5);
 /*	background-color:#eee;
 	opacity: 0.8;
 	text-shadow:
@@ -88,13 +91,16 @@ td{
 }
 
 button{
+	color: rgb(255,255,240);
 	text-align:center;
 	padding:10px;
-	border: 2px solid #002F5A;
+	/*border: 2px solid #002F5A;*/
+	border-style: none;
 	width: 30%;
 	margin-left: 35%;
 	margin-right: 35%; 
-	background-color: #6298C8;
+	background-color: #000066;
+	font-weight: bold;
 }
 
 .bingohead{
