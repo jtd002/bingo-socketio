@@ -24,9 +24,9 @@ window.onload = init;
 	}
 
 	function getName(){
-		if(name === undefined || name === null || name === ""){
+		if(name === undefined || name === null || name === "" || name === "null"){
 			name = prompt('Enter name: ');
-			if(name === null){
+			if(name === null || name === "" || name === undefined || name == "null"){
 				alert("You must enter a name to play!");
 				getName();
 			}
